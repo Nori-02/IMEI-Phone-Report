@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل دخول المشرف</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex items-center justify-center h-screen font-sans">
+  <div class="bg-white dark:bg-gray-800 p-6 rounded shadow max-w-sm w-full space-y-4">
+    <h1 class="text-xl font-bold text-center text-blue-600 dark:text-blue-400">🔐 دخول المشرف</h1>
+    <form id="loginForm" class="space-y-4">
+      <label class="block">
+        <span class="block mb-1 font-medium">كلمة المرور</span>
+        <input type="password" name="password" required class="w-full border rounded px-3 py-2" />
+      </label>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">دخول</button>
+      <div id="loginMsg" class="msg text-sm mt-2 text-center"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const password = e.target.password.value.trim();
+      const msg = document.getElementById("loginMsg");
+      msg.textContent = "";
+      msg.className = "msg";
+
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || "خطأ");
+
+        msg.classList.add("success");
+        msg.textContent = "✅ تم تسجيل الدخول بنجاح";
+        setTimeout(() => window.location.href = "/admin.html", 1500);
+      } catch (err) {
+        msg.classList.add("error");
+        msg.textContent = "❌ كلمة المرور غير صحيحة أو حدث خطأ";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title data-i18n="site_title">الإبلاغ عن هاتف مفقود/مسروق</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 font-sans">
+  <header class="bg-white dark:bg-gray-800 shadow p-4 flex flex-col md:flex-row items-center justify-between">
+    <h1 class="text-2xl font-bold flex items-center gap-2">
+      <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z" />
+      </svg>
+      <span data-i18n="site_title">الإبلاغ عن هاتف مفقود/مسروق</span>
+    </h1>
+    <div class="flex gap-2 mt-2 md:mt-0">
+      <button id="lang-ar" class="px-3 py-1 border rounded">العربية</button>
+      <button id="lang-en" class="px-3 py-1 border rounded">English</button>
+      <button id="toggleDark" class="px-3 py-1 border rounded">🌙 / ☀️</button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto p-4 space-y-10">
+    <!-- نموذج تقديم بلاغ -->
+    <section>
+      <h2 class="text-xl font-semibold mb-4" data-i18n="report_title">تقديم بلاغ</h2>
+      <form id="reportForm" class="space-y-4 bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <label class="block">
+          <span class="block font-medium mb-1" data-i18n="imei_label">رقم IMEI</span>
+          <input name="imei" required class="w-full border rounded px-3 py-2" />
+          <small class="text-sm text-gray-500" data-i18n="imei_hint">يمكنك إيجاده عبر *#06#</small>
+        </label>
+        <label><span data-i18n="status_label">الحالة</span>
+          <select name="status" required class="w-full border rounded px-3 py-2">
+            <option value="lost" data-i18n="status_lost">مفقود</option>
+            <option value="stolen" data-i18n="status_stolen">مسروق</option>
+          </select>
+        </label>
+        <label><span data-i18n="brand_label">العلامة</span><input name="brand" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="model_label">الطراز</span><input name="model" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="color_label">اللون</span><input name="color" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="date_label">تاريخ/وقت الفقد</span><input name="lost_date" type="datetime-local" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="location_label">الموقع التقريبي</span><input name="location" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="desc_label">وصف إضافي</span><textarea name="description" class="w-full border rounded px-3 py-2"></textarea></label>
+        <label><span data-i18n="contact_name_label">الاسم</span><input name="contact_name" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="contact_email_label">البريد الإلكتروني</span><input name="contact_email" type="email" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="contact_phone_label">الهاتف</span><input name="contact_phone" class="w-full border rounded px-3 py-2" /></label>
+        <label><span data-i18n="police_label">رقم محضر الشرطة</span><input name="police_report" class="w-full border rounded px-3 py-2" /></label>
+        <label class="flex items-center gap-2">
+          <input type="checkbox" name="is_public" checked class="accent-blue-600" />
+          <span data-i18n="public_label">السماح بعرض هذا البلاغ للعامة</span>
+        </label>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" data-i18n="submit_btn">إرسال البلاغ</button>
+        <div id="reportMsg" class="msg text-sm mt-2"></div>
+      </form>
+    </section>
+
+    <!-- نموذج فحص IMEI -->
+    <section>
+      <h2 class="text-xl font-semibold mb-4" data-i18n="check_title">فحص حالة جهاز</h2>
+      <form id="checkForm" class="space-y-4 bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <label class="block">
+          <span class="block font-medium mb-1" data-i18n="check_label">أدخل رقم IMEI</span>
+          <input id="checkImei" required class="w-full border rounded px-3 py-2" />
+        </label>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" data-i18n="check_btn">فحص</button>
+        <div id="checkResult" class="msg text-sm mt-2 whitespace-pre-line"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="text-center text-sm text-gray-600 dark:text-gray-400 p-4">
+    <p data-i18n="footer_note">نصيحة: بلّغ الشرطة ومزوّد الخدمة أيضًا لتعطيل الجهاز.</p>
+  </footer>
+
+  <div id="notify" class="fixed top-4 right-4 z-50 hidden max-w-sm px-4 py-3 rounded shadow text-white bg-green-600 dark:bg-green-500 cursor-pointer transition-opacity duration-300"></div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>لوحة الإدارة</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 p-6 font-sans">
+  <h1 class="text-2xl font-bold mb-6 text-blue-600 dark:text-blue-400">📋 لوحة التحكم</h1>
+
+  <form id="searchForm" class="mb-6 flex gap-2">
+    <input id="searchImei" placeholder="رقم IMEI" class="px-3 py-2 border rounded w-full" />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">بحث</button>
+  </form>
+
+  <div id="results" class="space-y-2"></div>
+
+  <div id="notify" class="fixed top-4 right-4 z-50 hidden max-w-sm px-4 py-3 rounded shadow text-white bg-blue-600 dark:bg-blue-500 cursor-pointer transition-opacity duration-300"></div>
+
+  <script>
+    const showNotification = (report) => {
+      const notify = document.getElementById("notify");
+      if (!notify) return;
+
+      const { imei, status, brand, model, location } = report;
+      notify.innerHTML = `
+        <strong>📡 بلاغ جديد</strong><br>
+        IMEI: ${imei}<br>
+        الحالة: ${status}<br>
+        ${brand || ""} ${model || ""}<br>
+        ${location || ""}
+      `;
+      notify.classList.remove("hidden");
+
+      notify.onclick = () => {
+        const url = `/report.html?imei=${encodeURIComponent(imei)}&status=${encodeURIComponent(status)}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(model)}&location=${encodeURIComponent(location)}`;
+        window.open(url, "_blank");
+      };
+
+      setTimeout(() => {
+        notify.classList.add("hidden");
+        notify.onclick = null;
+      }, 6000);
+    };
+
+    const imeiChannel = new BroadcastChannel("imeiChannel");
+    imeiChannel.onmessage = (e) => {
+      if (e.data.type === "newReport") {
+        showNotification(e.data.report);
+      }
+    };
+
+    document.getElementById("searchForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const imei = document.getElementById("searchImei").value.trim();
+      const res = await fetch(`/api/check?imei=${encodeURIComponent(imei)}`);
+      const json = await res.json();
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+      json.reports.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "p-3 border rounded bg-white dark:bg-gray-800";
+        div.innerHTML = `
+          <strong>${r.status.toUpperCase()}</strong><br>
+          ${r.brand || ""} ${r.model || ""}<br>
+          ${r.color || ""} • ${r.location || ""}<br>
+          <small>${r.created_at}</small>
+        `;
+        container.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>

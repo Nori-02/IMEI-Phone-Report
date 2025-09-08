@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>تفاصيل البلاغ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 p-6 font-sans">
+  <div class="max-w-xl mx-auto bg-white dark:bg-gray-800 rounded shadow p-6 space-y-4">
+    <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">📋 تفاصيل البلاغ</h1>
+    <div id="reportDetails" class="space-y-2 text-lg"></div>
+    <a href="/admin.html" class="text-blue-600 hover:underline">← العودة إلى لوحة التحكم</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const imei = params.get("imei");
+    const status = params.get("status");
+    const brand = params.get("brand");
+    const model = params.get("model");
+    const location = params.get("location");
+
+    const container = document.getElementById("reportDetails");
+    container.innerHTML = `
+      <p><strong>IMEI:</strong> ${imei}</p>
+      <p><strong>الحالة:</strong> ${status}</p>
+      <p><strong>العلامة:</strong> ${brand || "-"}</p>
+      <p><strong>الطراز:</strong> ${model || "-"}</p>
+      <p><strong>الموقع:</strong> ${location || "-"}</p>
+    `;
+  </script>
+</body>
+</html>

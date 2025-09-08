@@ -1,0 +1,28 @@
+/* تخصيص الرسائل */
+.msg {
+  font-weight: 500;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+}
+.msg.success {
+  color: #16a34a; /* Tailwind green-600 */
+}
+.msg.error {
+  color: #dc2626; /* Tailwind red-600 */
+}
+
+/* دعم اتجاه RTL و LTR حسب اللغة */
+html[lang="ar"] body {
+  direction: rtl;
+  text-align: right;
+}
+html[lang="en"] body {
+  direction: ltr;
+  text-align: left;
+}
+
+/* تحسين الإشعار */
+#notify {
+  font-weight: 600;
+  line-height: 1.5;
+}
