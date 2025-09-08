@@ -29,3 +29,14 @@ IMEI-Phone-Report/ ├── public/ ← Front-end files ├── src/ ← Serv
 npm install
 cp .env.example .env # Then modify the values ​​inside it
 npm run dev # Run the server during development
+
+
+### 🗃️ Database
+
+Automatically connects to PostgreSQL when a `DATABASE_URL` is available, or to SQLite locally when it is not.
+
+- Connection file: `src/db.js`
+- Available functions:
+- `initDB()` – Initializes the connection
+- `query(sql, params)` – Executes a unified query
+- `closeDB()` – Closes the connection (optional)
