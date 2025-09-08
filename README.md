@@ -1,21 +1,20 @@
 # 📱 IMEI Phone Report
 
-تطبيق ويب للإبلاغ عن الهواتف المفقودة أو المسروقة باستخدام رقم IMEI، مع لوحة تحكم للمشرفين، دعم لغتين، إشعارات فورية، وحماية JWT.
+A web application for reporting lost or stolen phones using the IMEI number, with an admin dashboard, dual-language support, instant notifications, and JWT protection.
 
 ---
 
-## 🚀 الميزات
+## 🚀 Features
 
-- تقديم بلاغات مفقودة/مسروقة عبر واجهة بسيطة
-- فحص حالة جهاز باستخدام رقم IMEI
-- دعم اللغة العربية والإنجليزية
-- إشعارات فورية للمشرفين عبر BroadcastChannel
-- صفحة تفاصيل البلاغ عند النقر
-- لوحة تحكم للمشرفين مع بحث مباشر
-- تسجيل دخول آمن باستخدام JWT
-- قاعدة بيانات PostgreSQL أو SQLite
+- Submit lost/stolen reports via a simple interface
+- Check device status using the IMEI number
+- Support for Arabic and English
+- Instant notifications for admins via BroadcastChannel
+- Report details page on click
+- Admin dashboard with live search
+- Secure login using JWT
+- PostgreSQL or SQLite database
 
 ---
 
-## 📁 هيكل المشروع
-
+## 📁 Project Structure
