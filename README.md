@@ -18,3 +18,14 @@ A web application for reporting lost or stolen phones using the IMEI number, wit
 ---
 
 ## 📁 Project Structure
+
+IMEI-Phone-Report/ ├── public/ ← Front-end files ├── src/ ← Server files (Express) ├── .env.example ← Required environment variables ├── package.json ← Project settings
+
+---
+
+## ⚙️ Run locally
+
+```bash
+npm install
+cp .env.example .env # Then modify the values ​​inside it
+npm run dev # Run the server during development
