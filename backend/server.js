@@ -8,17 +8,32 @@ import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 import pkg from 'pg';
 
+const express = require('express');
+const path = require('path');
+
+// يخدم الملفات الثابتة من مجلد "public"
+(express()).use(express.static(path.join(__dirname, 'public')));
+
+// يعيد ملف index.html عند زيارة الصفحة الرئيسية
+(express()).get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+(express()).listen((process.env.PORT || 3000), () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
+});
+
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // إعداد Express
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+(express()).use(express.json());
+(express()).use(express.static(path.join(__dirname, 'public')));
 
 // سياسة الأمان
-app.use((req, res, next) => {
+(express()).use((req, res, next) => {
   res.setHeader("Content-Security-Policy",
     "default-src 'self'; script-src 'self'; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';"
   );
@@ -57,7 +72,9 @@ async function query(sql, params = []) {
 }
 
 // تهيئة قاعدة البيانات
-await initDB();
+await initDB(); // تهيئة الاتصال
+await query("SELECT * FROM reports"); // تنفيذ استعلام
+await closeDB(); // إغلاق الاتصال (اختياري)
 const idType = isPostgres ? 'SERIAL' : 'INTEGER PRIMARY KEY AUTOINCREMENT';
 await query(`
   CREATE TABLE IF NOT EXISTS reports (
@@ -90,7 +107,7 @@ function requireJWT(req, res, next) {
 }
 
 // تسجيل دخول المشرف
-app.post("/api/auth/login", async (req, res) => {
+(express()).post("/api/auth/login", async (req, res) => {
   const { password } = req.body || {};
   const stored = process.env.ADMIN_PASSWORD;
 
@@ -102,7 +119,7 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 // إضافة بلاغ جديد
-app.post('/api/report', async (req, res) => {
+(express()).post('/api/report', async (req, res) => {
   const { imei, status, brand, model, color, location } = req.body;
   try {
     const insertQuery = isPostgres
@@ -116,7 +133,7 @@ app.post('/api/report', async (req, res) => {
 });
 
 // جلب جميع البلاغات (محمي)
-app.get('/api/reports', requireJWT, async (req, res) => {
+(express()).get('/api/reports', requireJWT, async (req, res) => {
   try {
     const reports = await query("SELECT * FROM reports ORDER BY created_at DESC");
     res.json(reports);
@@ -126,7 +143,7 @@ app.get('/api/reports', requireJWT, async (req, res) => {
 });
 
 // فحص حالة IMEI (علني)
-app.get('/api/check', async (req, res) => {
+(express()).get('/api/check', async (req, res) => {
   const imei = req.query.imei;
   if (!imei) return res.status(400).json({ error: "Missing IMEI" });
 
@@ -139,11 +156,11 @@ app.get('/api/check', async (req, res) => {
 });
 
 // إعادة توجيه الصفحة الرئيسية
-app.get('/', (req, res) => {
+(express()).get('/', (req, res) => {
   res.redirect('/index.html');
 });
 
 // تشغيل الخادم
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+(express()).listen((process.env.PORT || 3000), () => {
+  console.log(`🚀 Server running on port ${process.env.PORT || 3000}`);
 });
